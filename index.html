@@ -871,15 +871,20 @@ MODIS NDVI time series analysis using BFAST
 <div class="contents col-xs-12 col-md-10">
 <h1><a href="http://changemonitor-wur.github.io/">MODIS based time series analysis using BFAST</a> <img src="http://www.wageningenur.nl/upload/f9a0b5f2-15c5-4b84-9e14-20ef02f5e265_wur-logo.png" alt="WUR logo" /></h1>
 <p>Author: Jan Verbesselt</p>
-<p>Date: 18 March, 2016</p>
+<p>Date: 21 March, 2016</p>
 <p>Website: <a href="http://changemonitor-wur.github.io/" class="uri">http://changemonitor-wur.github.io/</a></p>
 <h1>Introduction</h1>
 <p>This document explains how to use R scripting language for downloading MODIS data and analysing it within R. The results of the analysis of MODIS data within R are illustrated. For this time series analysis demonstration it is not required to know R details, we only use R for some practical demonstration of its great potential. In this exercise we will automatically download MODIS data for specific locations, i.e. Flux tower sites, around the world. First, an introduction to MODIS satellite data and the flux tower sites follow. Second, the use of R is introduced. Finally, the exercise in R is explained, step by step.</p>
 <h1>MODIS satellite data</h1>
-<p>The MODIS satellite data that we will download for this time series analysis exercise is available from <a href="http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html">the following site</a>. MODIS data is made available for subsets above a global network of flux towers. FLUXNET, a &quot;network of regional networks&quot;, coordinates regional and global analysis of observations from micrometeorological tower sites. The flux tower sites use eddy covariance methods to measure the exchanges of carbon dioxide (CO<sub>2</sub>), water vapor, and energy between terrestrial ecosystems and the atmosphere. The FLUXNET database contains information about tower location and site characteristics as well as data availability. More information above what a flux tower is and the network of flux towers can be found <a href="http://www.fluxnet.ornl.gov/fluxnet/index.cfm">here</a>.</p>
+<p>The MODIS satellite data that we will download for this time series analysis exercise is available from <a href="http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html">the following site</a>. MODIS data is made available for subsets above a global network of flux towers. FLUXNET, a &quot;network of regional networks&quot;, coordinates regional and global analysis of observations from micrometeorological tower sites. The flux tower sites use eddy covariance methods to measure the exchanges of carbon dioxide (CO<sub>2</sub>), water vapor, and energy between terrestrial ecosystems and the atmosphere. The FLUXNET database contains information about tower location and site characteristics as well as data availability. More information above what a flux tower is and the network of flux towers can be found <a href="http://www.fluxnet.ornl.gov/">here</a>.</p>
 <p>For this exercise we will focus on the analysis of MODIS satellite data available for these flux towers. More specifically, we will look at the MODIS product called MOD13Q1 which are global 16-day images at a spatial resolution of 250 m. Each image contains several bands; i.e. blue, red, and near-infrared reflectances, centered at 469-nanometers, 645-nanometers, and 858-nanometers, respectively, are used to determine the MODIS vegetation indices.</p>
 <p>The MODIS Normalized Difference Vegetation Index (NDVI) complements NOAA's Advanced Very High Resolution Radiometer (AVHRR) NDVI products and provides continuity for time series historical applications. MODIS also includes a new Enhanced Vegetation Index (EVI) that minimises canopy background variations and maintains sensitivity over dense vegetation conditions. The EVI also uses the blue band to remove residual atmosphere contamination caused by smoke and sub-pixel thin cloud clouds. The MODIS NDVI and EVI products are computed from atmospherically corrected bi-directional surface reflectances that have been masked for water, clouds, heavy aerosols, and cloud shadows. Vegetation indices are used for global monitoring of vegetation conditions and are used in products displaying land cover and land cover changes. These data may be used as input for modeling global biogeochemical and hydrologic processes and global and regional climate. These data also may be used for characterizing land surface biophysical properties and processes, including primary production and land cover conversion.</p>
-<p>We will work with the MODIS NDVI band within the MOD13Q1 product. More information about this MODIS product can be found <a href="https://lpdaac.usgs.gov/products/modis_products_table/mod13q1">here</a>. Go to the NDVI and the pixel reliability Layer information and have a look.</p>
+<p>We will work with the MODIS NDVI band within the MOD13Q1 product. More information about this MODIS product can be found <a href="https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod13q1">here</a>. Go to the NDVI and the pixel reliability Layer information and have a look:</p>
+<ul>
+<li>above the table on the lower part of the webpage you can click on the <code>+</code> sign of the layers</li>
+<li><p>See the final column of the first table: <em>Science Data Sets for MODIS Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V005 (MOD13Q1)</em> to find the answer of the question below.</p></li>
+<li><p>then look at the Table 1: MOD13Q1 Pixel Reliability and Table 2: MOD13Q1 VI Quality) for finding the answer of the second question. Read the text above the table carefully to understand what the table and information means.</p></li>
+</ul>
 <blockquote>
 <p>Question 1: By what factor does the 250m MODIS NDVI image layer need to be multiplied in order to obtain values between 0 and 1?</p>
 </blockquote>
@@ -891,7 +896,7 @@ MODIS NDVI time series analysis using BFAST
 <ul>
 <li>Select Country: The Netherlands and select the Loobos Site.</li>
 <li>Have a look at the Corner coordinates and site details (this will be important for the R script as explained below).</li>
-<li>Via this site the data can be downloaded manually. We will automatically download the MODIS data via the R script.</li>
+<li>Via this site the data can be downloaded manually. In the tutorial we will automatically download MODIS data using R scripting, as explained below.</li>
 <li>Click on Time Series Advanced Version (User Defined QC setting) and select the MOD13Q1 data.</li>
 <li>Look at the NDVI time series data and also click on the google maps link to investigate the land cover type. It is mainly forested by Pinus Sylvestris or also called Scots Pine (within google maps satellite view).</li>
 </ul>
@@ -899,11 +904,11 @@ MODIS NDVI time series analysis using BFAST
 <p>Question 3: At which pixel number is the flux tower (i.e. the Site pixel) positioned in the MODIS 250m data grid (have a look at the link for corner coordinates and site details)</p>
 </blockquote>
 <blockquote>
-<p>Question 4: What happens with the NDVI Filter Applied Graph if you select only data that you can use with Confidence?</p>
+<p>Question 4: What happens with the NDVI Filter Applied Graph if you select only data that you can <em>use with Confidence</em>?</p>
 </blockquote>
 <h1>Getting started with R</h1>
 <p>We will download the MODIS data for the Loobos Site via R and process the data for one location to detect changes within the time series.</p>
-<p>Now follow the following tutorial on getting started with <a href="https://geoscripting-wur.github.io/Scripting4GeoIntro/#Basic_R_and_RStudio_setup">R and Rstudio</a>.</p>
+<p>Now follow the following tutorial on getting started with <a href="https://geoscripting-wur.github.io/Scripting4GeoIntro/#Basic_R_and_RStudio_setup">R and Rstudio</a> (click on this link), in case you have not followed the <em>geo-scripting</em> class.</p>
 <h1>Install packages and define functions for MODIS data analysis</h1>
 <p>Now we are ready to get started with the MODIS time series analysis exercise in R! First, choose your working directory (i.e. a folder on your hard drive) to which the MODIS data will be downloaded and where you will save your R script. Set your workdirectory in R using the <code>setwd()</code> command. Remark: on your computer the file path looks different on windows! In R you have to change the backslash symbol to a forward slash symbol e.g.:</p>
 <div class="row">
@@ -911,8 +916,8 @@ MODIS NDVI time series analysis using BFAST
 <span class="glyphicon glyphicon-chevron-down"></span> R source
 </button>
 <pre style=""><code class="source r">## "c:\student\MODIS"
-setwd(c("c:/student/MODIS/"))
-getwd() ## to check what your working directory is.</code></pre>
+setwd(c("c:/student/MODIS/")) ## set your working directory
+getwd() ## to check what your working directory is, all good?!</code></pre>
 </div>
 <p>Second, make sure your package installed in R are up-to-date by:</p>
 <div class="row">
@@ -928,10 +933,10 @@ install.packages("bfast", repos="http://R-Forge.R-project.org", dependencies=TRU
 install.packages("bfast", repos="http://R-Forge.R-project.org", 
                  dependencies=TRUE, type = "source")</code></pre>
 </div>
-<p>The necessary add-on packages need to be installed within R before loading the using the <code>library()</code> function. Below we define a helper function that does installing and loading of the packages for us.</p>
-<p>The two functions defined in the section below need to be run at once (select all of them in the R script window and do <em>Crtl-r</em>). This will define two functions which we will need to process the MODIS data time series. So nothing will happen now in R, but the function are loaded and ready to be used in the script sections below.</p>
+<p>The necessary add-on packages need to be installed within R before loading them in <code>R</code> using the <code>library()</code> function. Below we define a helper function that does installing and loading of the packages for us.</p>
+<p>The two functions defined in the section below need to be run <strong>at once</strong> (select all of them in the R script window and do <em>Crtl-r</em>). This will define two functions which we will need to process the MODIS data time series. So nothing will happen now in R, but the function are loaded and ready to be used in the script sections below.</p>
 <blockquote>
-<p>Note: you do not need to understand the details of the two functions below. Make sure you know how to use them. Understanding the details of the two functions below is only for advanced R users (so optional and not required for AEO!).</p>
+<p>Note: you do not need to understand the details of the two functions below. Make sure you know how to use them. Understanding the details of the two functions below is only for advanced R users (so optional and not required for the AEO course).</p>
 </blockquote>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
@@ -971,13 +976,16 @@ sel <- function(y,crit){
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
 </button>
-<pre style=""><code class="source r">fluxtower <- c("fn_nlloobos.txt")  
+<pre style=""><code class="source r">fluxtower <- c("fn_nlloobos.txt")
+
+## the ftp link to the data, is combine with the fluxtower name below
+## see `?paste' for more info and try out the example section
 filename <- paste(
 "ftp://daac.ornl.gov//data/modis_ascii_subsets//C5_MOD13Q1/data/MOD13Q1."
 , fluxtower,sep="")
 
-## now download the file only if the .csv file does not exist yet on your computer
-## then read the csv file using the 'read.csv' function
+## now we will download the file only if the .csv file does not exist yet on your computer
+## and then read the csv file using the 'read.csv' function
 
  if(!file.exists(fluxtower)) {
   download.file(filename,fluxtower)
@@ -996,8 +1004,10 @@ filename <- paste(
 </button>
 <pre style=""><code class="source r">fluxtower <- c("fn_autumbar.txt")</code></pre>
 </div>
-<p>Now try and change the name of the flux tower site and then rerun the section above to download data for another flux tower.</p>
-<p>The names of the flux towers for which MODIS data is available can be found in the following file available via this link: <a href="ftp://daac.ornl.gov//data/modis_ascii_subsets//5_MODIS_Subset_Sites_Information_Collection5.csv">MODISSubsetSiteInformation</a> , which you can open in Excel. The names that you need are in the <code>Site_ID</code> column.</p>
+<p>Now try and change the name of the flux tower site to a name of your choice and then rerun the section above to download data for another flux tower. You can select your own fluxtower via:</p>
+<ul>
+<li>The names of the flux towers for which MODIS data is available can be found in the following file available via this link: <a href="ftp://daac.ornl.gov//data/modis_ascii_subsets//5_MODIS_Subset_Sites_Information_Collection5.csv">MODISSubsetSiteInformation</a> , which you can open in Excel or via R (e.g. see the function <code>read.csv</code>). The names that you need are in the <code>Site_ID</code> column.</li>
+</ul>
 <h2>Manual MODIS data Downloading</h2>
 <p>If the above section does not work, you can download the data manually into your working directory via the following site: <a href="http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html">ModisViZ</a> and can be loaded in R via the R script below. Things to do to download the data manually:</p>
 <ul>

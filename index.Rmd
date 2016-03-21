@@ -29,7 +29,7 @@ First, an introduction to MODIS satellite data and the flux tower sites follow. 
 
 # MODIS satellite data
 
-The MODIS satellite data that we will download for this time series analysis exercise is available from [the following site](http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html). MODIS data is made available for subsets above a global network of flux towers. FLUXNET, a "network of regional networks", coordinates regional and global analysis of observations from micrometeorological tower sites. The flux tower sites use eddy covariance methods to measure the exchanges of carbon dioxide (CO~2~), water vapor, and energy between terrestrial ecosystems and the atmosphere.  The FLUXNET database contains information about tower location and site characteristics as well as data availability. More information above what a flux tower is and the network of flux towers can be found [here](http://www.fluxnet.ornl.gov/fluxnet/index.cfm).
+The MODIS satellite data that we will download for this time series analysis exercise is available from [the following site](http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html). MODIS data is made available for subsets above a global network of flux towers. FLUXNET, a "network of regional networks", coordinates regional and global analysis of observations from micrometeorological tower sites. The flux tower sites use eddy covariance methods to measure the exchanges of carbon dioxide (CO~2~), water vapor, and energy between terrestrial ecosystems and the atmosphere.  The FLUXNET database contains information about tower location and site characteristics as well as data availability. More information above what a flux tower is and the network of flux towers can be found [here](http://www.fluxnet.ornl.gov/).
 
 
 For this exercise  we will focus on the analysis of MODIS satellite data available for these flux towers. More specifically, we will look at the MODIS product called MOD13Q1 which are global 16-day images at a spatial resolution of 250 m. Each image contains several bands; i.e. blue, red, and near-infrared reflectances, centered at 469-nanometers, 645-nanometers, and 858-nanometers, respectively, are used to determine the MODIS vegetation indices.
@@ -39,7 +39,13 @@ The MODIS Normalized Difference Vegetation Index (NDVI) complements NOAA's Advan
 Vegetation indices are used for global monitoring of vegetation conditions and are used in products displaying land cover and land cover changes. These data may be used as input for modeling global biogeochemical and hydrologic processes and global and regional climate. These data also may be used for characterizing land surface biophysical properties and processes, including primary production and land cover conversion.
 
 
-We will work with the MODIS NDVI band within the MOD13Q1 product. More information about this MODIS product can be found [here](https://lpdaac.usgs.gov/products/modis_products_table/mod13q1). Go to the NDVI and the pixel reliability Layer information and have a look.
+We will work with the MODIS NDVI band within the MOD13Q1 product. More information about this MODIS product can be found [here](https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod13q1). 
+Go to the NDVI and the pixel reliability Layer information and have a look:
+
+- above the table on the lower part of the webpage you can click on the `+` sign of the layers
+- See the final column of the first table: *Science Data Sets for MODIS Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V005 (MOD13Q1)* to find the answer of the question below.
+
+- then look at the Table 1: MOD13Q1 Pixel Reliability and Table 2: MOD13Q1 VI Quality) for finding the answer of the second question. Read the text above the table carefully to understand what the table and information means.
 
 
 > Question 1: By what factor does the 250m MODIS NDVI image layer need to 
@@ -54,19 +60,19 @@ Please go to the [MODIS Land subsets website](http://daac.ornl.gov/cgi-bin/MODIS
 
   * Select Country: The Netherlands and select the Loobos Site. 
   * Have a look at the Corner coordinates and site details (this will be important for the R script as explained below).
-  * Via this site the data can be downloaded manually. We will automatically download the MODIS data via the R script.
+  * Via this site the data can be downloaded manually. In the tutorial we will automatically download MODIS data using R scripting, as explained below.
   * Click on Time Series Advanced Version (User Defined QC setting) and select the MOD13Q1 data.
   * Look at the NDVI time series data and also click on the google maps link to investigate the land cover type. It is mainly forested by Pinus Sylvestris or also called Scots Pine (within google maps satellite view).
 
 > Question 3: At which pixel number is the flux tower (i.e. the Site pixel) positioned in the MODIS 250m data grid (have a look at the link for corner coordinates and site details)
 
-> Question 4: What happens with the NDVI Filter Applied Graph if you select only data that you can use with Confidence?
+> Question 4: What happens with the NDVI Filter Applied Graph if you select only data that you can *use with Confidence*?
 
 # Getting started with R
 
 We will download the MODIS data for the Loobos Site via R and process the data for one location to detect changes within the time series.
 
-Now follow the following tutorial on getting started with [R and Rstudio](https://geoscripting-wur.github.io/Scripting4GeoIntro/#Basic_R_and_RStudio_setup).
+Now follow the following tutorial on getting started with [R and Rstudio](https://geoscripting-wur.github.io/Scripting4GeoIntro/#Basic_R_and_RStudio_setup) (click on this link), in case you have not followed the *geo-scripting* class.
 
 
 # Install packages and define functions for MODIS data analysis
@@ -76,8 +82,8 @@ First, choose your working directory (i.e. a folder on your hard drive) to which
   
 ```{r, eval = FALSE}
 ## "c:\student\MODIS"
-setwd(c("c:/student/MODIS/"))
-getwd() ## to check what your working directory is.
+setwd(c("c:/student/MODIS/")) ## set your working directory
+getwd() ## to check what your working directory is, all good?!
 ```
 
 Second, make sure your package installed in R are up-to-date by:
@@ -94,7 +100,7 @@ install.packages("bfast", repos="http://R-Forge.R-project.org",
 
 ```
 
-The necessary add-on packages need to be installed within R before loading the using the `library()` function. Below we define a helper function that does installing and loading of the packages for us. 
+The necessary add-on packages need to be installed within R before loading them in `R` using the `library()` function. Below we define a helper function that does installing and loading of the packages for us. 
 
 ```{r, echo=FALSE, message=FALSE, eval=FALSE}
 # pkgTest is a helper function to load packages and install packages only when they are not installed yet.
@@ -110,12 +116,12 @@ for (package in neededPackages){pkgTest(package)}
 ```
 
 
-The two functions defined in the section below need to be run at once (select all of them in the R script window and do *Crtl-r*). 
+The two functions defined in the section below need to be run **at once** (select all of them in the R script window and do *Crtl-r*). 
 This will define two functions which we will need to process the MODIS data time series. 
 So nothing will happen now in R, but the function are loaded and ready to be used in the script sections below. 
 
 > Note: you do not need to understand the details of the two functions below. 
-Make sure you know how to use them. Understanding the details of the two functions below is only for advanced R users (so optional and not required for AEO!).
+Make sure you know how to use them. Understanding the details of the two functions below is only for advanced R users (so optional and not required for the AEO course).
 
 ```{r}
 ## a function to create a regular "ts" (time series) object in R using time information (dt)
@@ -157,13 +163,16 @@ getwd() ## the file is downloaded to your working directory
 
 
 ```{r}
-fluxtower <- c("fn_nlloobos.txt")  
+fluxtower <- c("fn_nlloobos.txt")
+
+## the ftp link to the data, is combine with the fluxtower name below
+## see `?paste' for more info and try out the example section
 filename <- paste(
 "ftp://daac.ornl.gov//data/modis_ascii_subsets//C5_MOD13Q1/data/MOD13Q1."
 , fluxtower,sep="")
 
-## now download the file only if the .csv file does not exist yet on your computer
-## then read the csv file using the 'read.csv' function
+## now we will download the file only if the .csv file does not exist yet on your computer
+## and then read the csv file using the 'read.csv' function
 
  if(!file.exists(fluxtower)) {
   download.file(filename,fluxtower)
@@ -185,10 +194,10 @@ Data for a different fluxtower, a fluxtower in New South Wales, Australia, can b
 fluxtower <- c("fn_autumbar.txt")
 ```
 
-Now try and change the name of the flux tower site and then rerun the section above to download data for another flux tower. 
+Now try and change the name of the flux tower site to a name of your choice and then rerun the section above to download data for another flux tower. You can select your own fluxtower via:
 
-The names of the flux towers for which MODIS data is available can be found in the following file available via this link: [MODISSubsetSiteInformation](ftp://daac.ornl.gov//data/modis_ascii_subsets//5_MODIS_Subset_Sites_Information_Collection5.csv)
-, which you can open in Excel. The names that you need are in the `Site_ID` column.
+- The names of the flux towers for which MODIS data is available can be found in the following file available via this link: [MODISSubsetSiteInformation](ftp://daac.ornl.gov//data/modis_ascii_subsets//5_MODIS_Subset_Sites_Information_Collection5.csv)
+, which you can open in Excel or via R (e.g. see the function `read.csv`). The names that you need are in the `Site_ID` column.
 
 ## Manual MODIS data Downloading
 
