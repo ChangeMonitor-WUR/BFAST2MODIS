@@ -897,12 +897,10 @@ MODIS NDVI time series analysis using BFAST
 </ul>
 <h1>Online Analysis of MODIS satellite image data</h1>
 <p>Please go to the <a href="http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html">MODIS Land subsets website</a>:</p>
+<p>Now let's look at the MODIS data time series via this website. Do the following steps:</p>
 <ul>
-<li>Select Country: The Netherlands and select the Loobos Site.</li>
-<li>Have a look at the Corner coordinates and site details (this will be important for the R script as explained below).</li>
-<li>Via this site the data can be downloaded manually. In the tutorial we will automatically download MODIS data using R scripting, as explained below.</li>
-<li>Click on Time Series Advanced Version (User Defined QC setting) and select the MOD13Q1 data.</li>
-<li>Look at the NDVI time series data and also click on the google maps link to investigate the land cover type. It is mainly forested by Pinus Sylvestris or also called Scots Pine (within google maps satellite view).</li>
+<li><em>Select Country</em>: The Netherlands and select the Loobos Site.</li>
+<li>Click on <em>Time Series Advanced Version</em> (User Defined QC setting) and select the MOD13Q1 data.</li>
 </ul>
 <blockquote>
 <p>Question 3: At which pixel number is the flux tower (i.e. the Site pixel) positioned in the MODIS 250m data grid (have a look at the link for corner coordinates and site details)</p>
@@ -910,6 +908,11 @@ MODIS NDVI time series analysis using BFAST
 <blockquote>
 <p>Question 4: What happens with the NDVI Filter Applied Graph if you select only data that you can <em>use with Confidence</em>?</p>
 </blockquote>
+<p>Extra info:</p>
+<ul>
+<li>Click on the google maps, choose satellite view, link to investigate the land cover type. It is mainly forested by Pinus Sylvestris or also called Scots Pine.</li>
+<li>via the <a href="http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html">MODIS Land subsets website</a>, the data can be downloaded manually. In the tutorial we will automatically download MODIS data using R scripting.</li>
+</ul>
 <h1>Getting started with R</h1>
 <p>We will download the MODIS data for the Loobos Site via R and process the data for one location to detect changes within the time series.</p>
 <p>Now follow the following tutorial on getting started with <a href="https://geoscripting-wur.github.io/Scripting4GeoIntro/#Basic_R_and_RStudio_setup">R and Rstudio</a> (click on this link), in case you have not followed the <em>geo-scripting</em> class.</p>
