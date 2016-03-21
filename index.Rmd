@@ -51,7 +51,12 @@ Go to the NDVI and the pixel reliability Layer information and have a look:
 > Question 1: By what factor does the 250m MODIS NDVI image layer need to 
 be multiplied in order to obtain values between 0 and 1?
 
-> Question 2: What rank key (number?) would you use to obtain Good Data?
+> Question 2: What rank key (number?) would you use to obtain Good Data (see Table 1)?
+
+More info for Question 2:
+
+- **Pixel reliability**: Useful in post processing analysis and recaps the QA status of
+the product. This parameter is a simple decimal number that ranks the product into five categories [Good-Marginal-Snow/Ice-Cloudy-NoData]. Users can consult this layer instead of working with the `VI_QA layer`. The `VI_QA` layer is still present and can be used for detailed analysis (Table 2).
 
 
 # Online Analysis of MODIS satellite image data

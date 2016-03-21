@@ -889,8 +889,12 @@ MODIS NDVI time series analysis using BFAST
 <p>Question 1: By what factor does the 250m MODIS NDVI image layer need to be multiplied in order to obtain values between 0 and 1?</p>
 </blockquote>
 <blockquote>
-<p>Question 2: What rank key (number?) would you use to obtain Good Data?</p>
+<p>Question 2: What rank key (number?) would you use to obtain Good Data (see Table 1)?</p>
 </blockquote>
+<p>More info for Question 2:</p>
+<ul>
+<li><strong>Pixel reliability</strong>: Useful in post processing analysis and recaps the QA status of the product. This parameter is a simple decimal number that ranks the product into five categories [Good-Marginal-Snow/Ice-Cloudy-NoData]. Users can consult this layer instead of working with the <code>VI_QA layer</code>. The <code>VI_QA</code> layer is still present and can be used for detailed analysis (Table 2).</li>
+</ul>
 <h1>Online Analysis of MODIS satellite image data</h1>
 <p>Please go to the <a href="http://daac.ornl.gov/cgi-bin/MODIS/GR_col5_1/mod_viz.html">MODIS Land subsets website</a>:</p>
 <ul>
