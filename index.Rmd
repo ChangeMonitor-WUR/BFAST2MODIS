@@ -86,23 +86,16 @@ setwd(c("c:/student/MODIS/")) ## set your working directory
 getwd() ## to check what your working directory is, all good?!
 ```
 
-Second, make sure your package installed in R are up-to-date by:
+Second, make sure your packages installed in R are up-to-date by:
 
 ```{r, eval=FALSE, echo=TRUE}
 update.packages(ask=FALSE)
 
-## we install the latest bfast package from the R-forge website
-install.packages("bfast", repos="http://R-Forge.R-project.org", dependencies=TRUE)
-
-## for mac users you can do
-install.packages("bfast", repos="http://R-Forge.R-project.org", 
-                 dependencies=TRUE, type = "source")
-
 ```
 
-The necessary add-on packages need to be installed within R before loading them in `R` using the `library()` function. Below we define a helper function that does installing and loading of the packages for us. 
+Third, necessary add-on packages need to be installed within R before loading them in `R` using the `library()` function. Below we define a helper function that does installing and loading of the packages for us. 
 
-```{r, echo=FALSE, message=FALSE, eval=FALSE}
+```{r, echo=TRUE, message=FALSE, eval=FALSE}
 # pkgTest is a helper function to load packages and install packages only when they are not installed yet.
 pkgTest <- function(x)
 {
@@ -113,6 +106,17 @@ pkgTest <- function(x)
 }
 neededPackages <- c("strucchange","forecast","zoo", "bfast")
 for (package in neededPackages){pkgTest(package)}
+```
+
+Now you can check if bfast is installed:
+
+```{r, eval=FALSE}
+## we install the latest bfast package from the R-forge website
+install.packages("bfast", repos="http://R-Forge.R-project.org", dependencies=TRUE)
+
+## for mac users you can do
+install.packages("bfast", repos="http://R-Forge.R-project.org", 
+                 dependencies=TRUE, type = "source")
 ```
 
 

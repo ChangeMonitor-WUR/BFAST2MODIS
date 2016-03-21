@@ -919,21 +919,41 @@ MODIS NDVI time series analysis using BFAST
 setwd(c("c:/student/MODIS/")) ## set your working directory
 getwd() ## to check what your working directory is, all good?!</code></pre>
 </div>
-<p>Second, make sure your package installed in R are up-to-date by:</p>
+<p>Second, make sure your packages installed in R are up-to-date by:</p>
 <div class="row">
 <button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
 </button>
-<pre style=""><code class="source r">update.packages(ask=FALSE)
-
-## we install the latest bfast package from the R-forge website
+<pre style=""><code class="source r">update.packages(ask=FALSE)</code></pre>
+</div>
+<p>Third, necessary add-on packages need to be installed within R before loading them in <code>R</code> using the <code>library()</code> function. Below we define a helper function that does installing and loading of the packages for us.</p>
+<div class="row">
+<button class="source R toggle btn btn-xs btn-primary">
+<span class="glyphicon glyphicon-chevron-down"></span> R source
+</button>
+<pre style=""><code class="source r"># pkgTest is a helper function to load packages and install packages only when they are not installed yet.
+pkgTest <- function(x)
+{
+  if (x %in% rownames(installed.packages()) == FALSE) {
+    install.packages(x, dependencies= TRUE)    
+  }
+  library(x, character.only = TRUE)
+}
+neededPackages <- c("strucchange","forecast","zoo", "bfast")
+for (package in neededPackages){pkgTest(package)}</code></pre>
+</div>
+<p>Now you can check if bfast is installed:</p>
+<div class="row">
+<button class="source R toggle btn btn-xs btn-primary">
+<span class="glyphicon glyphicon-chevron-down"></span> R source
+</button>
+<pre style=""><code class="source r">## we install the latest bfast package from the R-forge website
 install.packages("bfast", repos="http://R-Forge.R-project.org", dependencies=TRUE)
 
 ## for mac users you can do
 install.packages("bfast", repos="http://R-Forge.R-project.org", 
                  dependencies=TRUE, type = "source")</code></pre>
 </div>
-<p>The necessary add-on packages need to be installed within R before loading them in <code>R</code> using the <code>library()</code> function. Below we define a helper function that does installing and loading of the packages for us.</p>
 <p>The two functions defined in the section below need to be run <strong>at once</strong> (select all of them in the R script window and do <em>Crtl-r</em>). This will define two functions which we will need to process the MODIS data time series. So nothing will happen now in R, but the function are loaded and ready to be used in the script sections below.</p>
 <blockquote>
 <p>Note: you do not need to understand the details of the two functions below. Make sure you know how to use them. Understanding the details of the two functions below is only for advanced R users (so optional and not required for the AEO course).</p>
